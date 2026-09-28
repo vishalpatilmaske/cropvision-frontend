@@ -1,26 +1,50 @@
 import { useRef } from "react";
+import { useAuth } from "../context/AuthContext";
 import { ASK_ASSISTANT_EVENT } from "./FarmAssistant";
 import "../styles/analysisReport.css";
 
 const PRINT_ROOT_ID = "print-root";
 
+// Letterhead contact block (same address as the website footer).
+const ORG_ADDRESS = [
+  "P. R. Pote Patil College of Engineering & Management",
+  "Shri Gajanan Township, Pote Estate, Kathora Road",
+  "Amravati, Maharashtra, India - 444602",
+];
+
 // Prints a copy of the report placed directly on <body>, so the page layout
 // around it (cards that clip overflow, grids, animations) can't hide or cut it.
-// In the print dialog, "Save as PDF" is the download.
-function printElement(element) {
+// The copy sits in a table whose empty header/footer rows repeat on every
+// printed page, keeping content clear of the fixed letterhead and footer.
+// In the print dialog, "Save as PDF" is the download; `fileName` becomes its name.
+function printElement(element, fileName) {
   document.getElementById(PRINT_ROOT_ID)?.remove();
   const root = document.createElement("div");
   root.id = PRINT_ROOT_ID;
-  root.appendChild(element.cloneNode(true));
+  root.innerHTML =
+    '<table class="lh-page"><thead><tr><td><div class="lh-space-top"></div></td></tr></thead>' +
+    '<tbody><tr><td class="lh-body"></td></tr></tbody>' +
+    '<tfoot><tr><td><div class="lh-space-bottom"></div></td></tr></tfoot></table>';
+  root.querySelector(".lh-body").appendChild(element.cloneNode(true));
   document.body.appendChild(root);
   document.body.classList.add("print-report");
 
+  const pageTitle = document.title;
+  document.title = fileName;
   const cleanup = () => {
     root.remove();
     document.body.classList.remove("print-report");
+    document.title = pageTitle;
   };
   window.addEventListener("afterprint", cleanup, { once: true });
   window.print();
+}
+
+function formatDateTime(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, {
+    day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
 }
 
 const ANALYSIS_TYPE_LABELS = {
@@ -73,7 +97,11 @@ function scoreTone(score) {
   return "danger";
 }
 
-export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showActions = true }) {
+// `customer` is whose report this is (for the printed letterhead); it defaults to
+// the signed-in farmer. The admin view passes the report's owner instead.
+export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showActions = true, customer }) {
+  const { user } = useAuth();
+  const farmer = customer || user;
   const {
     crop,
     analysis,
@@ -90,9 +118,10 @@ export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showA
   const showExpertNotice =
     needsExpert || analysis.assessment_level === "possible" || analysis.assessment_level === "unknown";
   const reportRef = useRef(null);
+  const reportNo = result.id ? `CV-${result.id.slice(-6).toUpperCase()}` : "CV-DRAFT";
 
   function printReport() {
-    if (reportRef.current) printElement(reportRef.current);
+    if (reportRef.current) printElement(reportRef.current, `CropVision-Report-${reportNo}`);
   }
 
   function askAssistant() {
@@ -108,10 +137,59 @@ export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showA
 
   return (
     <article className="ar-report" ref={reportRef}>
-      <div className="ar-print-header">
-        <strong>🌱 CropVision AI — Crop Health Report</strong>
-        {result.created_at && <span>{new Date(result.created_at).toLocaleString()}</span>}
-      </div>
+      {/* ---- Printed letterhead (hidden on screen) ---- */}
+      <header className="lh-header print-only">
+        <div className="lh-brand">
+          <span className="lh-mark" aria-hidden="true">🌱</span>
+          <div>
+            <strong>
+              Crop<span>Vision</span> AI
+            </strong>
+            <small>Smart Farming • Healthier Crops</small>
+          </div>
+        </div>
+        <address className="lh-contact">
+          {ORG_ADDRESS.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+          <span className="lh-web">{window.location.host}</span>
+        </address>
+      </header>
+
+      <section className="lh-meta print-only">
+        <div className="lh-title">
+          <h1>Crop Health Report</h1>
+          <span>
+            Report No. <strong>{reportNo}</strong>
+          </span>
+        </div>
+        <dl className="lh-grid">
+          <div>
+            <dt>Farmer name</dt>
+            <dd>{farmer?.name || "—"}</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>{farmer?.email || "—"}</dd>
+          </div>
+          <div>
+            <dt>Phone</dt>
+            <dd>{farmer?.phone || "—"}</dd>
+          </div>
+          <div>
+            <dt>Report date</dt>
+            <dd>{formatDateTime(result.created_at)}</dd>
+          </div>
+          <div>
+            <dt>Crop</dt>
+            <dd>{crop.name || "Not identified"}</dd>
+          </div>
+          <div>
+            <dt>Growth stage</dt>
+            <dd>{crop.growth_stage ? capitalize(crop.growth_stage) : "—"}</dd>
+          </div>
+        </dl>
+      </section>
 
       <div className={`ar-banner type-${analysis.type}`}>
         {imageUrl ? (
@@ -245,6 +323,27 @@ export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showA
       <p className="ar-footnote">
         AI visual assessment, not a lab diagnosis. Follow product labels for any chemical and wear protective gear.
       </p>
+
+      {/* ---- Printed sign-off and page footer (hidden on screen) ---- */}
+      <section className="lh-signoff print-only">
+        <div>
+          <span className="lh-sign-label">Assessed by</span>
+          <strong>CropVision AI</strong>
+          <small>AI photo analysis · {formatDateTime(result.created_at)}</small>
+        </div>
+        <div className="lh-sign">
+          <span className="lh-sign-line"></span>
+          <span className="lh-sign-label">Verified by (Agriculture Officer / KVK)</span>
+          <small>Name, signature &amp; stamp</small>
+        </div>
+      </section>
+
+      <footer className="lh-footer print-only">
+        <span>
+          CropVision AI · Report {reportNo} · {window.location.host}
+        </span>
+        <span>AI-generated assessment, not a lab diagnosis. Confirm serious problems with your local KVK.</span>
+      </footer>
     </article>
   );
 }

@@ -246,7 +246,7 @@ function CheckDrawer({ id, onClose, onDelete }) {
             )}
             <span className="adm-muted">{formatDate(record.created_at, true)}</span>
           </div>
-          <AnalysisResult result={record} showActions={false} />
+          <AnalysisResult result={record} showActions={false} customer={record.user} />
         </>
       )}
     </Drawer>

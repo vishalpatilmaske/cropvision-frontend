@@ -143,7 +143,8 @@
   margin-top: 2px;
 }
 
-.ar-print-header {
+/* Letterhead parts only appear in the printed report. */
+.print-only {
   display: none;
 }
 
@@ -430,14 +431,17 @@
 }
 
 /* Download / Print: the report button copies the report into #print-root on
-   <body> and adds body.print-report, so only that copy is printed. Normal
-   Ctrl+P on other pages is unaffected. */
+   <body> and adds body.print-report, so only that copy is printed -- on a
+   CropVision letterhead. Normal Ctrl+P on other pages is unaffected. */
 #print-root {
   display: none;
 }
 
+/* No page margin: this hides the browser's own date/URL lines; the letterhead
+   and the table spacers provide the margins instead. */
 @page {
-  margin: 12mm;
+  size: A4;
+  margin: 0;
 }
 
 @media print {
@@ -451,27 +455,8 @@
 
   body.print-report #print-root {
     display: block;
-  }
-
-  #print-root .ar-report {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  #print-root .ar-actions {
-    display: none !important;
-  }
-
-  #print-root .ar-print-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 2px solid var(--dark);
-    padding-bottom: 8px;
-    margin-bottom: 16px;
-    color: var(--dark);
-    font-size: 0.85rem;
+    padding: 0 14mm;
+    color: #163b1b;
   }
 
   #print-root * {
@@ -481,9 +466,249 @@
     transition: none !important;
   }
 
-  #print-root .ar-section,
-  #print-root .ar-plan-step,
-  #print-root .ar-outlook {
+  /* The table's empty header/footer rows repeat on every page, reserving the
+     space the fixed letterhead and footer cover. */
+  #print-root .lh-page {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #print-root .lh-page td {
+    padding: 0;
+  }
+
+  #print-root .lh-space-top {
+    height: 36mm;
+  }
+
+  #print-root .lh-space-bottom {
+    height: 20mm;
+  }
+
+  #print-root .print-only {
+    display: revert;
+  }
+
+  #print-root .ar-report {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #print-root .ar-actions,
+  #print-root .ar-footnote {
+    display: none !important;
+  }
+
+  /* ---- Letterhead (repeats on every page) ---- */
+  #print-root .lh-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 9mm 14mm 5mm;
+    background: #fff;
+    border-top: 5px solid #2e8b4e;
+    box-shadow: inset 0 -2px 0 #1b5e20, inset 0 -4px 0 #fff, inset 0 -5px 0 #a5d6a7;
+  }
+
+  #print-root .lh-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #print-root .lh-mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #e8f5e9;
+    font-size: 22px;
+  }
+
+  #print-root .lh-brand strong {
+    display: block;
+    font-family: "Poppins", "Inter", sans-serif;
+    font-size: 19pt;
+    line-height: 1.1;
+    color: #1b5e20;
+  }
+
+  #print-root .lh-brand strong span {
+    color: #43a863;
+  }
+
+  #print-root .lh-brand small {
+    display: block;
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #628066;
+  }
+
+  #print-root .lh-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-style: normal;
+    font-size: 8pt;
+    line-height: 1.45;
+    color: #4b634f;
+    text-align: right;
+  }
+
+  #print-root .lh-web {
+    margin-top: 2px;
+    font-weight: 700;
+    color: #2e8b4e;
+  }
+
+  /* ---- Report title + farmer details (first page) ---- */
+  #print-root .lh-meta {
+    margin-bottom: 14px;
     break-inside: avoid;
+  }
+
+  #print-root .lh-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  #print-root .lh-title h1 {
+    margin: 0;
+    font-family: "Poppins", "Inter", sans-serif;
+    font-size: 17pt;
+    color: #1b5e20;
+  }
+
+  #print-root .lh-title span {
+    font-size: 9.5pt;
+    color: #4b634f;
+  }
+
+  #print-root .lh-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    border: 1px solid #d3e8d5;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #d3e8d5;
+  }
+
+  #print-root .lh-grid div {
+    padding: 8px 12px;
+    background: #f6fbf6;
+  }
+
+  #print-root .lh-grid dt {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #628066;
+  }
+
+  #print-root .lh-grid dd {
+    margin: 2px 0 0;
+    font-size: 10pt;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---- Sign-off (end of report) ---- */
+  #print-root .lh-signoff {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px dashed #b9d6bf;
+    break-inside: avoid;
+  }
+
+  #print-root .lh-signoff > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  #print-root .lh-signoff strong {
+    font-size: 12pt;
+    color: #1b5e20;
+  }
+
+  #print-root .lh-sign {
+    align-items: center;
+    min-width: 62mm;
+    text-align: center;
+  }
+
+  #print-root .lh-sign-line {
+    width: 100%;
+    height: 14mm;
+    border-bottom: 1px solid #163b1b;
+    margin-bottom: 4px;
+  }
+
+  #print-root .lh-sign-label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #4b634f;
+  }
+
+  #print-root .lh-signoff small {
+    font-size: 8pt;
+    color: #628066;
+  }
+
+  /* ---- Page footer (repeats on every page) ---- */
+  #print-root .lh-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 3mm 14mm 7mm;
+    background: #fff;
+    border-top: 1px solid #d3e8d5;
+    font-size: 7.5pt;
+    color: #628066;
+  }
+
+  #print-root .lh-footer span:first-child {
+    font-weight: 700;
+    color: #2e8b4e;
+    white-space: nowrap;
+  }
+
+  #print-root .lh-footer span:last-child {
+    text-align: right;
+  }
+
+  /* Sections may continue on the next page, but never split a card, and
+     never leave a heading alone at the bottom of a page. */
+  #print-root .ar-plan-step,
+  #print-root .ar-outlook,
+  #print-root .ar-weather,
+  #print-root .ar-stats,
+  #print-root .ar-banner {
+    break-inside: avoid;
+  }
+
+  #print-root .ar-section-title {
+    break-after: avoid;
   }
 }
