@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { extractErrorMessage } from "../api/client";
 import { useAdminAuth } from "../context/AdminAuthContext";
 import "../styles/admin.css";
 
 export default function AdminLogin() {
-  const { login } = useAdminAuth();
+  const { admin, login } = useAdminAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,13 +18,15 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/admin/users");
+      navigate("/admin");
     } catch (err) {
       setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
   }
+
+  if (admin) return <Navigate to="/admin" replace />;
 
   return (
     <div className="admin-login-page">

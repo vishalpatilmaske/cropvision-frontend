@@ -1,9 +1,12 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
+import AdminLayout from "./components/admin/AdminLayout";
 import FarmAssistant from "./components/FarmAssistant";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminHealthChecks from "./pages/AdminHealthChecks";
 import AdminLogin from "./pages/AdminLogin";
+import AdminOverview from "./pages/AdminOverview";
 import AdminUsers from "./pages/AdminUsers";
 import CropRecommendation from "./pages/CropRecommendation";
 import DiseaseDetection from "./pages/DiseaseDetection";
@@ -17,8 +20,6 @@ import Register from "./pages/Register";
 import YieldPrediction from "./pages/YieldPrediction";
 import { useAuth } from "./context/AuthContext";
 
-const ADMIN_PATHS = ["/admin/login", "/admin/users"];
-
 // Sign-in pages aren't useful once signed in -- go straight to the app.
 function GuestOnly({ children }) {
   const { user, loading } = useAuth();
@@ -29,9 +30,8 @@ function GuestOnly({ children }) {
 export default function App() {
   const location = useLocation();
   const { user } = useAuth();
-  const showAppNavbar =
-    !["/", "/login", "/register"].includes(location.pathname) &&
-    !ADMIN_PATHS.includes(location.pathname);
+  const isAdmin = location.pathname.startsWith("/admin");
+  const showAppNavbar = !["/", "/login", "/register"].includes(location.pathname) && !isAdmin;
 
   return (
     <>
@@ -110,19 +110,23 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
-          path="/admin/users"
+          path="/admin"
           element={
             <AdminProtectedRoute>
-              <AdminUsers />
+              <AdminLayout />
             </AdminProtectedRoute>
           }
-        />
+        >
+          <Route index element={<AdminOverview />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="health-checks" element={<AdminHealthChecks />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {user && !location.pathname.startsWith("/admin") && <FarmAssistant key={user.id} />}
+      {user && !isAdmin && <FarmAssistant key={user.id} />}
     </>
   );
 }

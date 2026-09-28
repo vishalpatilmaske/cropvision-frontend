@@ -2,33 +2,76 @@ import { ADMIN_TOKEN_KEY, createApiClient } from "./client";
 
 export const adminApiClient = createApiClient(ADMIN_TOKEN_KEY);
 
+const data = (res) => res.data.data;
+
 export async function adminLogin(email, password) {
-  const res = await adminApiClient.post("/api/admin/login", { email, password });
-  return res.data.data;
+  return data(await adminApiClient.post("/api/admin/login", { email, password }));
 }
 
 export async function fetchStats() {
-  const res = await adminApiClient.get("/api/admin/stats");
-  return res.data.data;
+  return data(await adminApiClient.get("/api/admin/stats"));
 }
 
-export async function fetchUsers({ page = 1, perPage = 10, search } = {}) {
-  const res = await adminApiClient.get("/api/admin/users", {
-    params: { page, per_page: perPage, search: search || undefined },
-  });
-  return res.data.data;
+// --- Users ---
+
+export async function fetchUsers({ page = 1, perPage = 10, search, sort = "newest" } = {}) {
+  return data(
+    await adminApiClient.get("/api/admin/users", {
+      params: { page, per_page: perPage, search: search || undefined, sort },
+    })
+  );
+}
+
+export async function fetchUser(id) {
+  return data(await adminApiClient.get(`/api/admin/users/${id}`));
 }
 
 export async function createUser(payload) {
-  const res = await adminApiClient.post("/api/admin/users", payload);
-  return res.data.data.user;
+  return data(await adminApiClient.post("/api/admin/users", payload)).user;
 }
 
 export async function updateUser(id, payload) {
-  const res = await adminApiClient.put(`/api/admin/users/${id}`, payload);
-  return res.data.data.user;
+  return data(await adminApiClient.put(`/api/admin/users/${id}`, payload)).user;
 }
 
 export async function deleteUser(id) {
   await adminApiClient.delete(`/api/admin/users/${id}`);
+}
+
+// Downloads every user as a CSV file (the request needs the admin token,
+// so it's fetched as a blob rather than opened as a plain link).
+export async function downloadUsersCsv() {
+  const res = await adminApiClient.get("/api/admin/users/export", { responseType: "blob" });
+  const match = /filename="([^"]+)"/.exec(res.headers["content-disposition"] || "");
+  const url = URL.createObjectURL(res.data);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = match ? match[1] : "cropvision-users.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// --- Health checks (all farmers) ---
+
+export async function fetchHealthChecks({ page = 1, perPage = 12, analysisType, cropName, userId, needsReview } = {}) {
+  return data(
+    await adminApiClient.get("/api/admin/health-checks", {
+      params: {
+        page,
+        per_page: perPage,
+        analysis_type: analysisType || undefined,
+        crop_name: cropName || undefined,
+        user_id: userId || undefined,
+        needs_review: needsReview ? "true" : undefined,
+      },
+    })
+  );
+}
+
+export async function fetchHealthCheck(id) {
+  return data(await adminApiClient.get(`/api/admin/health-checks/${id}`));
+}
+
+export async function deleteHealthCheck(id) {
+  await adminApiClient.delete(`/api/admin/health-checks/${id}`);
 }
