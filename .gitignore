@@ -1,0 +1,12 @@
+node_modules/
+dist/
+
+# Environment files (real values live in Vercel's settings)
+.env
+.env.local
+.env.*.local
+
+.vercel/
+.DS_Store
+.vscode/
+.idea/

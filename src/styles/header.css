@@ -1,0 +1,239 @@
+/* Top header bar, shared by the landing page and the app (.site-header).
+   ".navbar.site-header" outranks the landing page's `.landing-page *` reset. */
+
+.navbar.site-header {
+  --header-ink: #1d4f3c;
+  --header-link: #6f7a73;
+  --header-accent: var(--btn);
+  --header-accent-dark: var(--btn-hover);
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+  padding: 0 clamp(16px, 3vw, 44px);
+  font-family: "Poppins", "Inter", system-ui, sans-serif;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #edf3ee;
+  box-shadow: 0 2px 10px rgba(20, 60, 30, 0.06);
+  animation: header-drop 0.5s ease-out both;
+  transition: height 0.25s ease, box-shadow 0.25s ease;
+}
+
+.navbar.site-header.scrolled {
+  height: 70px;
+  box-shadow: 0 8px 24px rgba(20, 60, 30, 0.1);
+}
+
+@keyframes header-drop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --- Logo --- */
+.site-header .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--header-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-header .logo-mark {
+  display: inline-block;
+  font-size: 2.1rem;
+  line-height: 1;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 0.25s ease;
+}
+
+.navbar.site-header.scrolled .logo-mark {
+  font-size: 1.8rem;
+}
+
+.site-header .logo:hover .logo-mark {
+  transform: rotate(-12deg) scale(1.15);
+}
+
+.site-header .logo-accent {
+  color: var(--header-accent);
+}
+
+/* --- Links --- */
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 2.8vw, 48px);
+}
+
+.site-header nav a {
+  position: relative;
+  padding: 6px 0;
+  font-size: clamp(1rem, 1.35vw, 1.22rem);
+  font-weight: 500;
+  color: var(--header-link);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--header-accent), #9ccc65);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.site-header nav a:hover {
+  color: var(--header-ink);
+  transform: translateY(-1px);
+}
+
+.site-header nav .header-btn::after {
+  display: none;
+}
+
+.site-header nav a:hover::after,
+.site-header nav a.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.site-header nav a.active {
+  color: var(--header-ink);
+  font-weight: 600;
+}
+
+/* --- Buttons: filled pill + outline pill --- */
+.site-header .header-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 34px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.site-header .header-btn.filled {
+  border: 2px solid var(--header-accent);
+  background: var(--header-accent);
+  color: #fff;
+}
+
+.site-header .header-btn.outline {
+  border: 2px solid var(--header-accent);
+  background: #f1fbf4;
+  color: var(--header-accent-dark);
+}
+
+.site-header .header-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(67, 168, 99, 0.3);
+}
+
+.site-header .header-btn.filled:hover {
+  background: var(--header-accent-dark);
+  border-color: var(--header-accent-dark);
+}
+
+.site-header .header-btn.outline:hover {
+  background: var(--header-accent);
+  color: #fff;
+}
+
+.site-header .header-btn:active {
+  transform: translateY(0);
+}
+
+/* Light sweep across the button on hover. */
+.site-header .header-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.site-header .header-btn:hover::before {
+  animation: header-shine 0.7s ease;
+}
+
+@keyframes header-shine {
+  to {
+    left: 125%;
+  }
+}
+
+.site-header .header-greeting {
+  color: var(--header-link);
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.navbar.site-header .actions,
+.site-header .nav-actions {
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+/* The app header has six links, so they sit a little closer than on the landing page. */
+.site-header .navbar-collapse nav {
+  gap: clamp(18px, 2vw, 36px);
+}
+
+/* Tight desktop widths: drop the greeting so links and button stay on one line. */
+@media (min-width: 1261px) and (max-width: 1560px) {
+  .site-header .header-greeting {
+    display: none;
+  }
+}
+
+.site-header .mobile-menu-btn {
+  color: var(--header-ink);
+  transition: transform 0.2s ease;
+}
+
+.site-header .mobile-menu-btn:hover {
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .site-header * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

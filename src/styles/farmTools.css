@@ -1,0 +1,792 @@
+/* Page-specific pieces for Fertilizer, Irrigation, Yield and My Farm Records */
+
+/* --- Fertilizer ------------------------------------------------------ */
+.toggle-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.toggle-row input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--dark);
+}
+
+.toggle-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin-top: 2px;
+}
+
+.soil-card-inputs {
+  margin-top: 12px;
+}
+
+.rating-chip {
+  align-self: flex-start;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.rating-low { background: #fdecea; color: #b71c1c; }
+.rating-medium { background: #fff8e1; color: #8d6e00; }
+.rating-high { background: #e8f5e9; color: #1b5e20; }
+
+.shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shop-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--chip);
+  color: var(--ink);
+}
+
+.shop-item-name,
+.shop-item-qty {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.shop-item-name strong {
+  font-size: 0.98rem;
+}
+
+.shop-item-name span,
+.shop-item-qty span {
+  font-size: 0.74rem;
+  opacity: 0.8;
+}
+
+.shop-item-qty strong {
+  font-size: 0.9rem;
+}
+
+.shop-item-cost {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.shop-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 14px;
+  border-top: 1px dashed var(--border);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.shop-total strong {
+  font-size: 1.2rem;
+  color: var(--dark);
+}
+
+.schedule {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.schedule li {
+  display: flex;
+  gap: 12px;
+}
+
+.schedule-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--light);
+  color: var(--dark);
+  font-weight: 800;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.schedule li strong {
+  display: block;
+  color: var(--dark);
+  font-size: 0.92rem;
+}
+
+.schedule-when {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.schedule-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.schedule-products span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--ink);
+}
+
+.schedule-products small {
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.nutrient-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.nutrient-row strong {
+  color: var(--text);
+}
+
+@media (max-width: 520px) {
+  .shop-item {
+    grid-template-columns: 1fr auto;
+  }
+
+  .shop-item-qty {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* --- Irrigation ------------------------------------------------------ */
+.today-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 18px;
+}
+
+.today-card > i {
+  font-size: 2rem;
+  margin-top: 4px;
+}
+
+.today-card h2 {
+  margin: 2px 0 4px;
+  font-size: 1.4rem;
+}
+
+.today-card p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.today-kicker {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+
+.today-card.tone-irrigate { background: #e3f2fd; color: #0d47a1; }
+.today-card.tone-ok { background: #e8f5e9; color: #1b5e20; }
+.today-card.tone-rain { background: #e0f2f1; color: #00695c; }
+.today-card.tone-wait { background: #fff3e0; color: #a2530a; }
+
+.today-amount {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.today-amount div {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.today-amount strong {
+  font-size: 1.05rem;
+}
+
+.today-amount span {
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+.today-time {
+  margin-top: 10px !important;
+  font-size: 0.82rem !important;
+}
+
+.now-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.now-row i {
+  color: #1e88e5;
+  margin-right: 4px;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  text-align: center;
+}
+
+.week-day.action-irrigate {
+  border-color: #90caf9;
+  background: #f3f9ff;
+}
+
+.week-day-name {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--dark);
+  white-space: nowrap;
+}
+
+.week-bars {
+  height: 56px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+}
+
+.week-bars .bar {
+  width: 9px;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+}
+
+.bar.use,
+.legend.use { background: #ffb74d; }
+.bar.rain,
+.legend.rain { background: #64b5f6; }
+
+.week-badge {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.action-irrigate .week-badge { color: #0d47a1; }
+.action-rain .week-badge { color: #00695c; }
+.action-wait .week-badge { color: #a2530a; }
+
+.week-mm {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0d47a1;
+}
+
+.week-rain-chance {
+  font-size: 0.64rem;
+  color: var(--muted);
+}
+
+.week-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.legend {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+
+.week-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.week-summary div {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fafdfa;
+  border: 1px solid var(--border);
+}
+
+.week-summary strong {
+  color: var(--dark);
+  font-size: 1rem;
+}
+
+.week-summary span {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+@media (max-width: 560px) {
+  .week-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .today-amount,
+  .week-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Yield ----------------------------------------------------------- */
+.yield-hero {
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #f1f9f2 0%, #ffffff 75%);
+  border: 1px solid var(--border);
+}
+
+.yield-kicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.yield-big {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.yield-big strong {
+  font-size: 2.6rem;
+  color: var(--dark);
+  line-height: 1.1;
+}
+
+.yield-big span {
+  color: var(--muted);
+}
+
+.yield-per-acre {
+  margin: 2px 0 14px;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.yield-range-bar {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffe0b2, #c8e6c9, #a5d6a7);
+}
+
+.yield-range-marker {
+  position: absolute;
+  top: -5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--dark);
+  border: 3px solid var(--white);
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.yield-range-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.yield-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.yield-steps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 0.86rem;
+  border-top: 1px solid var(--border);
+}
+
+.yield-steps li:first-child {
+  border-top: none;
+}
+
+.yield-steps li i {
+  color: var(--green);
+  width: 16px;
+}
+
+.yield-steps li.down strong { color: #c62828; }
+.yield-steps li.up strong { color: #2e7d32; }
+
+.yield-steps li.total {
+  background: var(--light);
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.income-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+
+.income-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.income-row label span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+.income-row input {
+  width: 110px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.income-value {
+  display: flex;
+  flex-direction: column;
+}
+
+.income-value strong {
+  font-size: 1.4rem;
+  color: var(--dark);
+}
+
+.income-value span {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* --- My Farm Records ------------------------------------------------- */
+.records-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+}
+
+.records-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.records-tab i {
+  color: var(--green);
+}
+
+.records-tab.active {
+  background: var(--btn);
+  border-color: var(--btn);
+  color: var(--white);
+}
+
+.records-tab.active i {
+  color: var(--soft);
+}
+
+.records-count {
+  font-size: 0.72rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--light);
+  color: var(--dark);
+}
+
+.records-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.records-stats div {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+}
+
+.records-stats strong {
+  font-size: 1.5rem;
+  color: var(--dark);
+}
+
+.records-stats .records-stat-text {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.records-stats span {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .records-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.records-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.records-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.records-search {
+  position: relative;
+  min-width: 220px;
+}
+
+.records-search i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.records-search input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 14px 8px 34px;
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+a.record-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--soft);
+  box-shadow: 0 10px 24px rgba(27, 94, 32, 0.08);
+}
+
+.record-card strong {
+  color: var(--dark);
+  font-size: 0.96rem;
+}
+
+.record-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.record-score {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.score-good { background: #e8f5e9; color: #1b5e20; }
+.score-warn { background: #fff3e0; color: #a2530a; }
+.score-bad { background: #fdecea; color: #b71c1c; }
+
+.record-meta,
+.record-date {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.record-date {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.record-severity {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.record-light {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.record-big {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.record-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.record-chips span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--light);
+  color: var(--dark);
+  text-transform: capitalize;
+}
+
+.record-chips span.down {
+  background: #fdecea;
+  color: #b71c1c;
+}
+
+.record-crops {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.record-crops li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.86rem;
+}
+
+.record-crops strong {
+  font-size: 0.86rem;
+  color: var(--green);
+}
+
+.record-lines {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.records-empty .tool-empty-icon {
+  color: var(--soft);
+}
+
+.records-empty .btn {
+  margin-top: 12px;
+  display: inline-flex;
+}
