@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchStats } from "../api/adminApi";
+import { downloadNewsletterCsv, fetchStats } from "../api/adminApi";
 import { extractErrorMessage } from "../api/client";
 import { RankedBars, TrendBars } from "../components/admin/AdminCharts";
 import { Panel, StatCard, TYPE_LABELS } from "../components/admin/AdminUi";
@@ -17,6 +17,7 @@ export default function AdminOverview() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -28,6 +29,17 @@ export default function AdminOverview() {
   }, []);
 
   useEffect(load, [load]);
+
+  async function exportNewsletter() {
+    setExporting(true);
+    try {
+      await downloadNewsletterCsv();
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    } finally {
+      setExporting(false);
+    }
+  }
 
   if (!stats) {
     return (
@@ -103,6 +115,28 @@ export default function AdminOverview() {
           <RankedBars items={stats.top_crops} empty="No crops yet." />
         </Panel>
       </div>
+
+      <Panel
+        title="Newsletter"
+        subtitle="Emails signed up from the website footer"
+        actions={
+          <button
+            type="button"
+            className="adm-btn ghost"
+            onClick={exportNewsletter}
+            disabled={exporting || !stats.newsletter_subscribers}
+          >
+            <i className={`fa-solid ${exporting ? "fa-spinner fa-spin" : "fa-file-arrow-down"}`} aria-hidden="true"></i>{" "}
+            Export CSV
+          </button>
+        }
+      >
+        <div className="adm-newsletter">
+          <i className="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+          <strong>{stats.newsletter_subscribers}</strong>
+          <span>active subscriber{stats.newsletter_subscribers === 1 ? "" : "s"}</span>
+        </div>
+      </Panel>
 
       <Panel title="Saved plans" subtitle={`${savedPlans} plans saved from the farm tools`}>
         <div className="adm-plan-grid">

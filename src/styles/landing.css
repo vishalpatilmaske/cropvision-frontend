@@ -974,8 +974,40 @@
   transition: 0.3s;
 }
 
-.landing-page .subscribe-box button:hover {
+.landing-page .subscribe-box button:hover:not(:disabled) {
   background: #5da832;
+}
+
+.landing-page .subscribe-box button {
+  min-width: 104px;
+}
+
+.landing-page .subscribe-box button:disabled,
+.landing-page .subscribe-box input:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.landing-page .subscribe-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 350px;
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.landing-page .subscribe-message.done {
+  color: #b9e8a0;
+}
+
+.landing-page .subscribe-message.error {
+  color: #ffb4a8;
+}
+
+.landing-page .subscribe-message i {
+  margin-top: 3px;
 }
 
 .landing-page .footer-bottom {

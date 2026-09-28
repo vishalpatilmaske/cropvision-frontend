@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HeroWeatherBadge from "../components/HeroWeatherBadge";
+import NewsletterForm from "../components/NewsletterForm";
 import useScrolled from "../hooks/useScrolled";
 import "../styles/header.css";
 import "../styles/landing.css";
@@ -332,10 +333,7 @@ export default function Home() {
           <div className="footer-section newsletter">
             <h3>Newsletter</h3>
             <p>Subscribe for farming insights and updates</p>
-            <div className="subscribe-box">
-              <input type="email" placeholder="Enter your email" />
-              <button type="button">Subscribe</button>
-            </div>
+            <NewsletterForm />
           </div>
         </div>
 

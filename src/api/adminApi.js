@@ -38,18 +38,21 @@ export async function deleteUser(id) {
   await adminApiClient.delete(`/api/admin/users/${id}`);
 }
 
-// Downloads every user as a CSV file (the request needs the admin token,
-// so it's fetched as a blob rather than opened as a plain link).
-export async function downloadUsersCsv() {
-  const res = await adminApiClient.get("/api/admin/users/export", { responseType: "blob" });
+// CSV downloads need the admin token, so they're fetched as a blob rather
+// than opened as a plain link.
+async function downloadCsv(path, fallbackName) {
+  const res = await adminApiClient.get(path, { responseType: "blob" });
   const match = /filename="([^"]+)"/.exec(res.headers["content-disposition"] || "");
   const url = URL.createObjectURL(res.data);
   const link = document.createElement("a");
   link.href = url;
-  link.download = match ? match[1] : "cropvision-users.csv";
+  link.download = match ? match[1] : fallbackName;
   link.click();
   URL.revokeObjectURL(url);
 }
+
+export const downloadUsersCsv = () => downloadCsv("/api/admin/users/export", "cropvision-users.csv");
+export const downloadNewsletterCsv = () => downloadCsv("/api/admin/newsletter/export", "cropvision-newsletter.csv");
 
 // --- Health checks (all farmers) ---
 

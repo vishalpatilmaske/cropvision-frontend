@@ -564,6 +564,26 @@
   color: var(--adm-muted);
 }
 
+.adm-newsletter {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.adm-newsletter i {
+  color: var(--btn);
+  font-size: 1.1rem;
+}
+
+.adm-newsletter strong {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 1.75rem;
+}
+
+.adm-newsletter span {
+  color: var(--adm-muted);
+}
+
 .adm-empty-small {
   margin: 8px 0;
   font-size: 0.88rem;
