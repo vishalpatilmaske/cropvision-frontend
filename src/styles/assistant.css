@@ -12,6 +12,7 @@
 }
 
 .fa-launcher {
+  position: relative; /* anchors the pulse rings; no z-index, so they sit behind it */
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -26,22 +27,156 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 12px 30px var(--btn-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: visible;
+  /* `translate` (float) and `scale` (hover) are separate properties, so they combine. */
+  transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease;
+  animation:
+    faLauncherIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards, /* not "both": its end state would lock `scale` and block the hover grow */
+    faFloat 3.2s ease-in-out 1s infinite;
 }
 
 .fa-launcher i {
   font-size: 1.35rem;
+  animation: faIconSpin 0.35s ease both;
+}
+
+/* Every few seconds the chat bubble gives a small wiggle. */
+.fa-launcher:not(.open) i {
+  animation: faIconSpin 0.35s ease both, faWiggle 6s ease-in-out 2s infinite;
+}
+
+/* Soft rings rippling out -- a short pulse, then a pause, so it never nags. */
+.fa-launcher:not(.open)::before,
+.fa-launcher:not(.open)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--btn);
+  opacity: 0;
+  pointer-events: none;
+  animation: faRing 4.5s ease-out 1.2s infinite;
+}
+
+.fa-launcher:not(.open)::after {
+  animation-delay: 1.8s;
+}
+
+/* Light sweep on hover (clipped to the button by its own mask). */
+.fa-launcher .fa-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fa-launcher .fa-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+}
+
+.fa-launcher:hover .fa-shine::before {
+  animation: faShine 0.75s ease;
 }
 
 .fa-launcher:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(27, 94, 32, 0.42);
+  scale: 1.06;
+  background: var(--btn-hover);
+  box-shadow: 0 18px 38px rgba(27, 94, 32, 0.42);
+  animation-play-state: running, paused; /* hold the float while hovering */
+}
+
+.fa-launcher:hover::before,
+.fa-launcher:hover::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+.fa-launcher:active {
+  scale: 0.96;
 }
 
 .fa-launcher.open {
   padding: 0;
   width: 58px;
   justify-content: center;
+}
+
+@keyframes faLauncherIn {
+  from {
+    opacity: 0;
+    translate: 0 30px;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes faFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@keyframes faRing {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  45%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35, 1.6);
+  }
+}
+
+@keyframes faWiggle {
+  0%,
+  88%,
+  100% {
+    transform: rotate(0);
+  }
+  91% {
+    transform: rotate(-14deg);
+  }
+  94% {
+    transform: rotate(12deg);
+  }
+  97% {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes faIconSpin {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes faShine {
+  to {
+    left: 120%;
+  }
 }
 
 .fa-panel {
@@ -440,5 +575,17 @@
 @media print {
   .fa-root {
     display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-launcher,
+  .fa-launcher i,
+  .fa-launcher::before,
+  .fa-launcher::after,
+  .fa-launcher .fa-shine::before,
+  .fa-panel {
+    animation: none !important;
+    transition: none !important;
   }
 }

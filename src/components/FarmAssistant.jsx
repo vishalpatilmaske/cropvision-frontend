@@ -261,7 +261,9 @@ export default function FarmAssistant() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close farm assistant" : "Open farm assistant"}
       >
-        <i className={`fa-solid ${open ? "fa-xmark" : "fa-comment-dots"}`}></i>
+        <span className="fa-shine" aria-hidden="true"></span>
+        {/* key: remount on toggle so the icon spins in each time */}
+        <i key={open ? "close" : "chat"} className={`fa-solid ${open ? "fa-xmark" : "fa-comment-dots"}`}></i>
         {!open && <span className="fa-launcher-label">Ask Krishi Mitra</span>}
       </button>
     </div>
