@@ -25,9 +25,13 @@ npm run dev                 # http://localhost:5173
 
 | Variable | Purpose |
 |---|---|
-| `VITE_API_BASE_URL` | Backend URL, no trailing slash (e.g. `https://cropvision-api.vercel.app`) |
+| `VITE_API_BASE_URL` | Backend URL, no trailing slash |
 
-It is baked into the build, so change it → rebuild / redeploy. Never put secrets in a `VITE_*`
+- Local dev (`.env`): `http://localhost:8000`
+- Production builds (`.env.production`, committed): `https://cropvision-backend.vercel.app`
+
+It is baked into the build, so a change needs a rebuild / redeploy. A `VITE_API_BASE_URL` set in
+Vercel's Environment Variables (type **Config**, not Secret) overrides `.env.production`. Never put secrets in a `VITE_*`
 variable — they end up in the browser bundle. Google sign-in needs no frontend setting: the button
 reads the Client ID from the backend (`/api/auth/providers`).
 
@@ -47,8 +51,8 @@ src/
 
 ## Deployment (Vercel)
 
-Import this repo as a Vercel project (preset **Vite**), set `VITE_API_BASE_URL` to the backend's
-URL and deploy. `vercel.json` makes every route load the app and caches built assets. Then add this
+Import this repo as a Vercel project (preset **Vite**) and deploy — the backend URL comes from
+`.env.production`. `vercel.json` makes every route load the app and caches built assets. Then add this
 site's URL to the backend's `ALLOWED_ORIGINS`.
 
 Full walkthrough for both projects:
