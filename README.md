@@ -32,8 +32,7 @@ npm run dev                 # http://localhost:5173
 
 It is baked into the build, so a change needs a rebuild / redeploy. A `VITE_API_BASE_URL` set in
 Vercel's Environment Variables (type **Config**, not Secret) overrides `.env.production`. Never put secrets in a `VITE_*`
-variable — they end up in the browser bundle. Google sign-in needs no frontend setting: the button
-reads the Client ID from the backend (`/api/auth/providers`).
+variable — they end up in the browser bundle.
 
 ## Structure
 
@@ -42,7 +41,7 @@ src/
 ├── api/          axios client (auth header, session-expiry handling) + per-feature API calls
 ├── context/      AuthContext (farmer), AdminAuthContext
 ├── components/   Navbar, route guards, AnalysisResult (health report), FarmAssistant (chat),
-│                 DigitalTwin (3D, lazy-loaded), GoogleSignInButton, tools/ (shared form pieces)
+│                 DigitalTwin (3D, lazy-loaded), tools/ (shared form pieces)
 ├── hooks/        useFarmLocation, useSeasonWeather, useScrolled
 ├── lib/          compressImage (shrinks photos before upload), cropSimulation, farmOptions, storage
 ├── pages/        One file per route (Home, Login, DiseaseDetection, History, Admin*, ...)

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import apiClient, { SESSION_EXPIRED_EVENT, TOKEN_KEY } from "../api/client";
 
 const AuthContext = createContext(null);
@@ -45,22 +45,13 @@ export function AuthProvider({ children }) {
     return signedInUser;
   }
 
-  // Exchanges the token from Google's sign-in popup for our own session.
-  const signInWithGoogle = useCallback(async (googleAccessToken) => {
-    const res = await apiClient.post("/api/auth/google", { access_token: googleAccessToken });
-    const { user: signedInUser, access_token: token } = res.data.data;
-    localStorage.setItem(TOKEN_KEY, token);
-    setUser(signedInUser);
-    return signedInUser;
-  }, []);
-
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, requestOtp, verifyOtp, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, requestOtp, verifyOtp, logout }}>
       {children}
     </AuthContext.Provider>
   );

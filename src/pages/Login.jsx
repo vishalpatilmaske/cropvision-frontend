@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { extractErrorMessage } from "../api/client";
 import AuthLayout from "../components/AuthLayout";
-import GoogleSignInButton from "../components/GoogleSignInButton";
 import OtpStep from "../components/OtpStep";
 import { useAuth } from "../context/AuthContext";
 
@@ -83,8 +82,6 @@ export default function Login() {
               )}
             </button>
           </form>
-
-          <GoogleSignInButton />
 
           <p className="auth-footnote">
             Don't have an account? <Link to="/register">Create one</Link>
