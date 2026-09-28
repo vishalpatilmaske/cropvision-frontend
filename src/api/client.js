@@ -56,3 +56,8 @@ export function extractErrorMessage(error) {
 }
 
 export default apiClient;
+
+// "Did you mean ramesh@gmail.com?" -- the server's suggested email for a typo, if any.
+export function emailSuggestion(error) {
+  return error?.response?.data?.error?.details?.suggestion || null;
+}

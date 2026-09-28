@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { extractErrorMessage } from "../api/client";
+import { emailSuggestion, extractErrorMessage } from "../api/client";
 import AuthLayout from "../components/AuthLayout";
 import OtpStep from "../components/OtpStep";
 import { useAuth } from "../context/AuthContext";
@@ -13,12 +13,14 @@ export default function Login() {
   const [resendIn, setResendIn] = useState(60);
   const [error, setError] = useState("");
   const [notFound, setNotFound] = useState(false);
+  const [suggestion, setSuggestion] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSendCode(e) {
     e.preventDefault();
     setError("");
     setNotFound(false);
+    setSuggestion(null);
     setLoading(true);
     try {
       const data = await requestOtp(email.trim(), "login");
@@ -26,6 +28,7 @@ export default function Login() {
       setStep("code");
     } catch (err) {
       setNotFound(err?.response?.data?.error?.code === "ACCOUNT_NOT_FOUND");
+      setSuggestion(emailSuggestion(err));
       setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
@@ -46,7 +49,20 @@ export default function Login() {
         <>
           {error && (
             <div className="error-banner">
-              {error} {notFound && <Link to="/register">Create an account</Link>}
+              {error} {notFound && !suggestion && <Link to="/register">Create an account</Link>}
+              {suggestion && (
+                <button
+                  type="button"
+                  className="email-fix-btn"
+                  onClick={() => {
+                    setEmail(suggestion);
+                    setError("");
+                    setSuggestion(null);
+                  }}
+                >
+                  Use {suggestion}
+                </button>
+              )}
             </div>
           )}
 

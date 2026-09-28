@@ -306,6 +306,24 @@
   cursor: not-allowed;
 }
 
+/* "Use ramesh@gmail.com" -- one-tap fix for a mistyped email domain. */
+.email-fix-btn {
+  display: block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.email-fix-btn:hover {
+  background: #fff5f5;
+}
+
 .auth-footnote {
   margin-top: 18px;
   text-align: center;

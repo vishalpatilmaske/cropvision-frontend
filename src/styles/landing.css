@@ -1010,6 +1010,25 @@
   margin-top: 3px;
 }
 
+.landing-page .subscribe-message {
+  flex-wrap: wrap;
+}
+
+.landing-page .subscribe-fix {
+  padding: 4px 10px;
+  border: 1px solid #b9e8a0;
+  border-radius: 6px;
+  background: transparent;
+  color: #b9e8a0;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.landing-page .subscribe-fix:hover {
+  background: rgba(185, 232, 160, 0.12);
+}
+
 .landing-page .footer-bottom {
   width: 100%;
   margin: 50px auto 0;

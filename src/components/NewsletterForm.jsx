@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { extractErrorMessage } from "../api/client";
+import { emailSuggestion, extractErrorMessage } from "../api/client";
 import { subscribeToNewsletter } from "../api/newsletterApi";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -9,6 +9,7 @@ export default function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState("idle"); // idle | sending | done | error
   const [message, setMessage] = useState("");
+  const [suggestion, setSuggestion] = useState(null);
 
   async function submit(e) {
     e.preventDefault();
@@ -19,6 +20,7 @@ export default function NewsletterForm() {
       return;
     }
     setState("sending");
+    setSuggestion(null);
     try {
       const result = await subscribeToNewsletter(value);
       setState("done");
@@ -27,6 +29,7 @@ export default function NewsletterForm() {
     } catch (err) {
       setState("error");
       setMessage(extractErrorMessage(err));
+      setSuggestion(emailSuggestion(err));
     }
   }
 
@@ -53,6 +56,19 @@ export default function NewsletterForm() {
         <p className={`subscribe-message ${state}`} role={state === "error" ? "alert" : "status"}>
           <i className={`fa-solid ${state === "done" ? "fa-circle-check" : "fa-circle-exclamation"}`} aria-hidden="true"></i>{" "}
           {message}
+          {suggestion && (
+            <button
+              type="button"
+              className="subscribe-fix"
+              onClick={() => {
+                setEmail(suggestion);
+                setSuggestion(null);
+                setState("idle");
+              }}
+            >
+              Use {suggestion}
+            </button>
+          )}
         </p>
       )}
     </form>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { extractErrorMessage } from "../api/client";
+import { emailSuggestion, extractErrorMessage } from "../api/client";
 import AuthLayout from "../components/AuthLayout";
 import OtpStep from "../components/OtpStep";
 import { useAuth } from "../context/AuthContext";
@@ -13,6 +13,7 @@ export default function Register() {
   const [resendIn, setResendIn] = useState(60);
   const [error, setError] = useState("");
   const [exists, setExists] = useState(false);
+  const [suggestion, setSuggestion] = useState(null);
   const [loading, setLoading] = useState(false);
 
   function update(field, value) {
@@ -26,6 +27,7 @@ export default function Register() {
     e.preventDefault();
     setError("");
     setExists(false);
+    setSuggestion(null);
     if (!details.name) {
       setError("Please enter your name.");
       return;
@@ -37,6 +39,7 @@ export default function Register() {
       setStep("code");
     } catch (err) {
       setExists(err?.response?.data?.error?.code === "EMAIL_EXISTS");
+      setSuggestion(emailSuggestion(err));
       setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
@@ -58,6 +61,19 @@ export default function Register() {
           {error && (
             <div className="error-banner">
               {error} {exists && <Link to="/login">Sign in</Link>}
+              {suggestion && (
+                <button
+                  type="button"
+                  className="email-fix-btn"
+                  onClick={() => {
+                    update("email", suggestion);
+                    setError("");
+                    setSuggestion(null);
+                  }}
+                >
+                  Use {suggestion}
+                </button>
+              )}
             </div>
           )}
 
