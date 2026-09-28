@@ -9,6 +9,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const scrolled = useScrolled();
+  const firstName = user?.name?.split(" ")[0] || "Farmer";
 
   function closeMenu() {
     setMenuOpen(false);
@@ -43,9 +44,14 @@ export default function Navbar() {
         <div className="actions">
           {user ? (
             <>
-              <span className="header-greeting">Hi, {user.name?.split(" ")[0] || "farmer"}</span>
-              <button type="button" className="header-btn outline" onClick={handleLogout}>
-                Log Out
+              <span className="header-account" title={user.email}>
+                <span className="header-avatar" aria-hidden="true">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
+                <span className="header-account-name">{firstName}</span>
+              </span>
+              <button type="button" className="header-btn outline header-logout" onClick={handleLogout}>
+                <i className="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out
               </button>
             </>
           ) : (

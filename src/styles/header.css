@@ -197,10 +197,35 @@
   }
 }
 
-.site-header .header-greeting {
-  color: var(--header-link);
-  font-size: 1.05rem;
+/* Signed-in user: initial in a circle + first name. */
+.site-header .header-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 14px 4px 4px;
+  border-radius: 999px;
+  background: #f1fbf4;
+  border: 1px solid #d8eedd;
   white-space: nowrap;
+}
+
+.site-header .header-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--btn);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.site-header .header-account-name {
+  color: var(--header-ink);
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .navbar.site-header .actions,
@@ -209,14 +234,32 @@
   gap: 20px;
 }
 
-/* The app header has six links, so they sit a little closer than on the landing page. */
-.site-header .navbar-collapse nav {
-  gap: clamp(18px, 2vw, 36px);
+/* App header (signed in): six links, centred between the logo and the account area,
+   sized to match the page content rather than the landing page. */
+@media (min-width: 1261px) {
+  .site-header .navbar-collapse nav {
+    flex: 1;
+    justify-content: center;
+    gap: clamp(16px, 1.9vw, 34px);
+  }
+
+  .site-header .navbar-collapse nav a {
+    font-size: clamp(0.95rem, 1.05vw, 1.06rem);
+  }
 }
 
-/* Tight desktop widths: drop the greeting so links and button stay on one line. */
-@media (min-width: 1261px) and (max-width: 1560px) {
-  .site-header .header-greeting {
+.site-header .header-logout {
+  padding: 9px 20px;
+  font-size: 0.95rem;
+}
+
+/* Tight desktop widths: keep just the initial so everything stays on one line. */
+@media (min-width: 1261px) and (max-width: 1440px) {
+  .site-header .header-account {
+    padding: 4px;
+  }
+
+  .site-header .header-account-name {
     display: none;
   }
 }
