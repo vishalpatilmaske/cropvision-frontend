@@ -429,51 +429,41 @@
   line-height: 1.55;
 }
 
-/* Download / Print: the report button adds body.print-report, so only the
-   report is printed (normal Ctrl+P on other pages is unaffected). */
+/* Download / Print: the report button copies the report into #print-root on
+   <body> and adds body.print-report, so only that copy is printed. Normal
+   Ctrl+P on other pages is unaffected. */
+#print-root {
+  display: none;
+}
+
+@page {
+  margin: 12mm;
+}
+
 @media print {
-  body.print-report .navbar,
-  body.print-report .disease-hero,
-  body.print-report .upload-card,
-  body.print-report .recent-checks,
-  body.print-report .digital-twin,
-  body.print-report .history-back {
+  body.print-report {
+    background: #fff;
+  }
+
+  body.print-report > *:not(#print-root) {
     display: none !important;
   }
 
-  body.print-report .disease-page .grid-2 {
+  body.print-report #print-root {
     display: block;
   }
 
-  body.print-report .card {
-    box-shadow: none;
-    border: none;
-    background: #fff;
+  #print-root .ar-report {
+    max-width: none;
+    margin: 0;
     padding: 0;
   }
 
-  body.print-report * {
-    visibility: hidden;
-  }
-
-  body.print-report .ar-report,
-  body.print-report .ar-report * {
-    visibility: visible;
-  }
-
-  body.print-report .ar-report {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 8px 4px;
-  }
-
-  body.print-report .ar-actions {
+  #print-root .ar-actions {
     display: none !important;
   }
 
-  body.print-report .ar-print-header {
+  #print-root .ar-print-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -484,15 +474,16 @@
     font-size: 0.85rem;
   }
 
-  body.print-report .ar-report * {
+  #print-root * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     animation: none !important;
+    transition: none !important;
   }
 
-  body.print-report .ar-section,
-  body.print-report .ar-plan-step,
-  body.print-report .ar-outlook {
+  #print-root .ar-section,
+  #print-root .ar-plan-step,
+  #print-root .ar-outlook {
     break-inside: avoid;
   }
 }

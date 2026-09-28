@@ -1,5 +1,27 @@
+import { useRef } from "react";
 import { ASK_ASSISTANT_EVENT } from "./FarmAssistant";
 import "../styles/analysisReport.css";
+
+const PRINT_ROOT_ID = "print-root";
+
+// Prints a copy of the report placed directly on <body>, so the page layout
+// around it (cards that clip overflow, grids, animations) can't hide or cut it.
+// In the print dialog, "Save as PDF" is the download.
+function printElement(element) {
+  document.getElementById(PRINT_ROOT_ID)?.remove();
+  const root = document.createElement("div");
+  root.id = PRINT_ROOT_ID;
+  root.appendChild(element.cloneNode(true));
+  document.body.appendChild(root);
+  document.body.classList.add("print-report");
+
+  const cleanup = () => {
+    root.remove();
+    document.body.classList.remove("print-report");
+  };
+  window.addEventListener("afterprint", cleanup, { once: true });
+  window.print();
+}
 
 const ANALYSIS_TYPE_LABELS = {
   healthy: "Healthy",
@@ -67,11 +89,10 @@ export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showA
   const title = analysis.name || ANALYSIS_TYPE_LABELS[analysis.type] || analysis.type;
   const showExpertNotice =
     needsExpert || analysis.assessment_level === "possible" || analysis.assessment_level === "unknown";
+  const reportRef = useRef(null);
 
   function printReport() {
-    document.body.classList.add("print-report");
-    window.addEventListener("afterprint", () => document.body.classList.remove("print-report"), { once: true });
-    window.print();
+    if (reportRef.current) printElement(reportRef.current);
   }
 
   function askAssistant() {
@@ -86,7 +107,7 @@ export default function AnalysisResult({ result, imageUrl, onSimulateIn3D, showA
   }
 
   return (
-    <article className="ar-report">
+    <article className="ar-report" ref={reportRef}>
       <div className="ar-print-header">
         <strong>🌱 CropVision AI — Crop Health Report</strong>
         {result.created_at && <span>{new Date(result.created_at).toLocaleString()}</span>}
